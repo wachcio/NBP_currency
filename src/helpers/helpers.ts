@@ -1,6 +1,6 @@
 import { useState, useDebugValue } from 'react';
 
-export const useStateWithLabel = (name, initialValue) => {
+export const useStateWithLabel = (name: string, initialValue: any) => {
     const [value, setValue] = useState(initialValue);
     useDebugValue(`${name}: ${value}`);
     return [value, setValue];
