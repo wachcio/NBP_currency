@@ -1,5 +1,6 @@
 import React, { ReactEventHandler } from 'react';
 import { useStateWithLabel } from './helpers/helpers';
+import { currencyCode } from './currencyCode';
 import './App.css';
 
 interface APIRes {
@@ -16,8 +17,8 @@ interface APIRes {
 }
 
 function App() {
-    const [currencyCode, setCurrencyCode] = useStateWithLabel(
-        'currencyCode',
+    const [currentCurrencyCode, setCurrentCurrencyCode] = useStateWithLabel(
+        'currentCurrencyCode',
         'NOK'
     );
 
@@ -32,18 +33,33 @@ function App() {
     );
 
     const getDataFromAPI = async () => {
-        const res = await fetch(
-            `https://api.nbp.pl/api/exchangerates/rates/A/NOK/${date}?format=json`
-        );
-        const data: APIRes | string = await res.json();
+        try {
+            const res = await fetch(
+                `https://api.nbp.pl/api/exchangerates/rates/A/${currentCurrencyCode}/${date}`,
+                {
+                    headers: {
+                        Accept: 'application/json',
+                    },
+                }
+            );
+            const data: APIRes = await res.json();
 
-        if (typeof data === 'string') return setExchangeRate(null);
-        return setExchangeRate(data.rates[0].mid);
+            return setExchangeRate(data.rates[0].mid);
+        } catch {
+            setExchangeRate('Niestety nie mogłem pobrać danych');
+            new Error('Niestety nie mogłem pobrać danych');
+        }
     };
 
     const handleButton = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         getDataFromAPI();
+    };
+
+    const options = () => {
+        return currencyCode.map((code) => {
+            return <option value={code}>{code}</option>;
+        });
     };
 
     return (
@@ -62,7 +78,16 @@ function App() {
                         onChange={(e) => setDate(e.target.value)}
                     />
                 </label>
-                <label>Waluta 'NOK'</label>
+                <label>
+                    Waluta:
+                    <select
+                        name="code"
+                        value={currentCurrencyCode}
+                        onChange={(e) => setCurrentCurrencyCode(e.target.value)}
+                    >
+                        {options()}
+                    </select>
+                </label>
                 <button onClick={handleButton}>Pobierz kurs</button>
             </div>
             {exchangeRate ? <h2>Kurs: {exchangeRate}</h2> : null}
