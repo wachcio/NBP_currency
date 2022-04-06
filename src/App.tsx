@@ -31,6 +31,10 @@ function App() {
         'exchangeRate',
         null
     );
+    const [exchangeRateName, setExchangeRateName] = useStateWithLabel(
+        'exchangeRateName',
+        null
+    );
 
     const getDataFromAPI = async () => {
         try {
@@ -44,6 +48,7 @@ function App() {
             );
             const data: APIRes = await res.json();
 
+            setExchangeRateName(data.currency);
             return setExchangeRate(data.rates[0].mid);
         } catch {
             setExchangeRate('Niestety nie mogłem pobrać danych');
@@ -58,7 +63,7 @@ function App() {
 
     const options = () => {
         return currencyCode.map((code) => {
-            return <option value={code}>{code}</option>;
+            return <option value={code.code}>{code.currency}</option>;
         });
     };
 
@@ -90,7 +95,11 @@ function App() {
                 </label>
                 <button onClick={handleButton}>Pobierz kurs</button>
             </div>
-            {exchangeRate ? <h2>Kurs: {exchangeRate}</h2> : null}
+            {exchangeRate ? (
+                <h2>
+                    Kurs <i>{exchangeRateName}</i>: {exchangeRate} PLN
+                </h2>
+            ) : null}
         </div>
     );
 }
