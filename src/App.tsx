@@ -68,38 +68,51 @@ function App() {
     };
 
     return (
-        <div className="App">
-            <h1>
+        <div className="flex flex-col items-center">
+            <h1 className="p-10 block text-xl font-medium text-gray-700 text-center">
                 Aplikacja służy do sprawdzania kursów walut z danego dnia według
                 tabeli A NBP
             </h1>
-            <div className="form">
-                <label>
-                    Data kursu:
-                    <input
-                        type="date"
-                        name="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                    />
-                </label>
-                <label>
-                    Waluta:
-                    <select
-                        name="code"
-                        value={currentCurrencyCode}
-                        onChange={(e) => setCurrentCurrencyCode(e.target.value)}
-                    >
-                        {options()}
-                    </select>
-                </label>
-                <button onClick={handleButton}>Pobierz kurs</button>
+            <div className="shadow w-6/12 sm:rounded-md sm:overflow-hidden">
+                <div className="px-4 py-5 bg-slate-200 space-y-6 sm:p-6">
+                    <div className="grid grid-cols-1 gap-6">
+                        <label className="block text-sm font-medium text-gray-700">
+                            Data kursu:
+                            <input
+                                type="date"
+                                name="date"
+                                value={date}
+                                onChange={(e) => setDate(e.target.value)}
+                                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            />
+                        </label>
+                        <label className="block text-sm font-medium text-gray-700">
+                            Waluta:
+                            <select
+                                name="code"
+                                value={currentCurrencyCode}
+                                onChange={(e) =>
+                                    setCurrentCurrencyCode(e.target.value)
+                                }
+                                className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            >
+                                {options()}
+                            </select>
+                        </label>
+                        <button
+                            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                            onClick={handleButton}
+                        >
+                            Pobierz kurs
+                        </button>
+                    </div>
+                    {exchangeRate ? (
+                        <h2 className="block text-xl font-medium text-gray-700 text-center">
+                            Kurs <i>{exchangeRateName}</i>: {exchangeRate} PLN
+                        </h2>
+                    ) : null}
+                </div>
             </div>
-            {exchangeRate ? (
-                <h2>
-                    Kurs <i>{exchangeRateName}</i>: {exchangeRate} PLN
-                </h2>
-            ) : null}
         </div>
     );
 }
