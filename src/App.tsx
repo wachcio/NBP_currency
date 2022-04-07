@@ -107,9 +107,16 @@ function App() {
                         </button>
                     </div>
                     {exchangeRate ? (
-                        <h2 className="block text-xl font-medium text-gray-700 text-center">
-                            Kurs <i>{exchangeRateName}</i>: {exchangeRate} PLN
-                        </h2>
+                        exchangeRate === 'Niestety nie mogłem pobrać danych' ? (
+                            <h2 className="block text-xl font-medium text-gray-700 text-center">
+                                {exchangeRate}
+                            </h2>
+                        ) : (
+                            <h2 className="block text-xl font-medium text-gray-700 text-center">
+                                Kurs <i>{exchangeRateName}</i>: {exchangeRate}{' '}
+                                PLN
+                            </h2>
+                        )
                     ) : null}
                 </div>
             </div>
